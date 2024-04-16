@@ -22,6 +22,7 @@
 #include "cargo_items/_cargo_items.dme"
 #include "elysium_stuff/_elysium_stuff.dme"
 #include "celadon_old_syndicate_rigs/_celadon_old_syndicate_rigs.dme"
+#include "ship_shields\shield_generator.dm"
 
 
 // --- MISC --- //

@@ -1,7 +1,7 @@
 /obj/machinery/power/shield_generator
 	name = "Shield generator Cobra"
 	desc = "It's a high efficiency shields generator."
-	icon = 'icons/obj/machines/shieldsgen.dmi'
+	//icon = 'icons/obj/machines/shieldsgen.dmi'
 	icon_state = "shields-unassembled"
 	density = TRUE
 	use_power = NO_POWER_USE
@@ -10,7 +10,12 @@
 	var/obj/machinery/power/defence/stabilizedfield
 	var/obj/machinery/power/defence/stabilizedfieldtwo
 
+	var/shield_integrity = 0
+	var/max_shield_integrity = 100
+	var/shield_recharge_speed = 1
+	var/mode = 0 // 0 - выключен; 1,2,3,4,5 - скорости зарядки
 
+/*
 /obj/machinery/power/generator/Initialize(mapload)
 	. = ..()
 	find_circs()
@@ -210,3 +215,25 @@
 /obj/machinery/power/generator/obj_break(damage_flag)
 	kill_circs()
 	..()
+*/
+/obj/machinery/power/shield_generator/proc/recharge(forced_full = FALSE)
+	if(forced_full)
+		shield_integrity = max_shield_integrity
+		return
+	if(shield_integrity >= max_shield_integrity)
+		return
+
+	shield_integrity = min(shield_integrity + shield_recharge_speed, max_shield_integrity)
+
+/obj/machinery/power/shield_generator/proc/do_damage(damage = 0)
+	if(shield_integrity - damage >= 0)
+		shield_integrity = max(shield_integrity - damage, 0)
+		return FALSE
+	shield_integrity -= damage
+	return TRUE
+
+/obj/machinery/power/shield_generator/process()
+	if(!mode)
+		return
+
+	src.recharge()
